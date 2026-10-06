@@ -3,7 +3,7 @@
 Prévia pública do protótipo v2 do teste Modelo Emocional, para teste online pelo celular.
 
 - Endereço: https://zamirrodrigues-coder.github.io/ibn-modelo-emocional-preview/
-- Versão: `f1.3-descoberta-r12`
+- Versão: `f1.3-descoberta-r13`
 - É um protótipo de validação. O resultado ainda não é homologado metodologicamente.
 - Nada é enviado: as respostas, o e-mail e o WhatsApp ficam só no navegador de quem responde.
 - O ponto de interrogação com o racional vem ligado. Para alguém de fora responder, toque em Desligar no aviso amarelo.
