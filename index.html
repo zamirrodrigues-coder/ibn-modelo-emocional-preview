@@ -263,6 +263,20 @@ body.tela-abertura { background-color: var(--ab-fundo-2); background-image: line
 .abertura-assinatura span { font-size: 8px; line-height: 1; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ab-suave); opacity: 0.85; }
 .assinatura-simbolo { width: 16px; height: auto; }
 .assinatura-marca { width: 45px; height: auto; margin-top: 1px; }
+/* Seu Perfil no layout do mockup do Zamir (06/10), mesma linguagem da tela inicial. */
+.perfil { display: flex; flex-direction: column; padding: 28px 18px 0; min-height: 100vh; min-height: 100svh; box-sizing: border-box; }
+.perfil-titulo { font-family: "EB Garamond", var(--font-display); font-weight: 400; font-size: 2.15rem; letter-spacing: -0.01em; line-height: 1.1; color: var(--ink); margin: 16px 0 0; }
+.perfil-apoio { font-size: 15.5px; font-weight: 300; line-height: 1.4; color: var(--ab-suave); margin: 8px 0 0; max-width: none; }
+.perfil-grupo { display: flex; flex-direction: column; gap: 10px; margin: 26px 0 0; }
+.perfil-apoio + .perfil-grupo { margin-top: 36px; }
+.perfil-rotulo { font-family: var(--font-body); font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ab-suave); margin: 0; }
+.perfil .escolhas-linha { gap: 7px; }
+.perfil .escolhas-linha button { flex: 1 1 calc(50% - 7px); min-height: 44px; padding: 7px 9px; border-radius: 10px; border: 1px solid var(--ab-borda); background: var(--surface); color: var(--ink); font-size: 13.5px; font-weight: 400; line-height: 1.3; text-align: center; }
+.perfil .escolhas-linha button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.perfil-acoes { margin: 26px 0 0; }
+.perfil-acoes .botao-primario { min-width: 104px; }
+.perfil .abertura-assinatura { margin-top: 18px; }
+
 details.ferramentas { margin: 24px 0 0; border-top: 1px dashed var(--grid); padding-top: 14px; color: var(--muted); }
 details.ferramentas > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; }
 details.ferramentas > div { margin-top: 18px; }
@@ -934,6 +948,15 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
   }
 
   // ------------------------------------------------------------------ abertura e triagem
+  // Assinatura "Uma Experiência" com o símbolo e o logotipo IBN Life, no pé da abertura e do perfil.
+  function assinatura() {
+    var M = window.MARCA || {};
+    return '<footer class="abertura-assinatura"><span>' + esc(TD.abertura_experiencia) + '</span>' +
+      (M.simbolo ? '<img class="assinatura-simbolo" src="' + M.simbolo + '" alt="" width="16" height="15">' : '') +
+      (M.ibnlife ? '<img class="assinatura-marca" src="' + M.ibnlife + '" alt="' + esc(TD.abertura_marca_alt) + '" width="45" height="14">' : '<strong>' + esc(TD.abertura_marca_alt) + '</strong>') +
+      '</footer>';
+  }
+
   // Tela inicial no layout do mockup do Zamir (06/10): a tela é a do mockup; as ferramentas do
   // protótipo (validação, chamada do QR e exemplos) ficam recolhidas abaixo da assinatura.
   function telaAbertura() {
@@ -957,10 +980,7 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
         '<button class="botao botao-primario abertura-botao" type="submit">' + esc(TD.abertura_botao) + '</button></form>';
     }
     h += '<div class="abertura-legal"><p>' + esc(TD.abertura_privacidade) + '</p><p>' + esc(TD.abertura_salvaguarda_curta) + '</p></div>';
-    h += '<footer class="abertura-assinatura"><span>' + esc(TD.abertura_experiencia) + '</span>' +
-      (M.simbolo ? '<img class="assinatura-simbolo" src="' + M.simbolo + '" alt="" width="16" height="15">' : '') +
-      (M.ibnlife ? '<img class="assinatura-marca" src="' + M.ibnlife + '" alt="' + esc(TD.abertura_marca_alt) + '" width="45" height="14">' : '<strong>' + esc(TD.abertura_marca_alt) + '</strong>') +
-      '</footer></section>';
+    h += assinatura() + '</section>';
     h += '<details class="ferramentas"><summary>' + esc(TD.ferramentas_titulo) + '</summary><div class="pilha-larga">';
     h += '<p class="nota">Protótipo v2 · Modo Descoberta · ' + esc(D.versao) + '</p>';
     h += '<div class="validacao pilha"><h3>' + esc(TD.validacao_titulo) + '</h3><label class="marcar"><input id="racional-toggle" type="checkbox"' + (racionalLigado ? ' checked' : '') + '><span>' + esc(TD.racional_toggle) + '</span></label></div>';
@@ -973,16 +993,27 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
 
   function telaTriagem() {
     var tri = D.triagem;
-    var h = '<section class="etapa pilha-larga"><div class="pilha"><p class="eyebrow">' + esc(TD.triagem_eyebrow) + '</p><h2>' + esc(TD.triagem_titulo) + '</h2><p>' + esc(TD.triagem_porque) + '</p></div>';
-    h += '<div class="pilha"><h3>' + esc(TD.triagem_ocupacao) + '</h3>' + chips("ocupacao", tri.ocupacoes, estado.ocupacao) + '</div>';
-    if (estado.ocupacao === "negocio") h += '<div class="pilha"><h3>' + esc(TD.triagem_tipo_negocio) + '</h3>' + chips("tipo", tri.tipos_negocio, estado.tipoNegocio) + '</div>';
-    if (estado.ocupacao === "colaborador") h += '<div class="pilha"><h3>' + esc(TD.triagem_lidera) + '</h3>' + chips("lidera", tri.lidera, estado.lidera === true ? "sim" : (estado.lidera === false ? "nao" : null)) + '</div>';
-    if (estado.ocupacao) h += '<div class="pilha"><h3>' + esc(TD.triagem_filhos) + '</h3>' + chips("filhos", tri.filhos, estado.filhos === true ? "sim" : (estado.filhos === false ? "nao" : null)) + '</div>';
-    h += '<div class="acoes acoes-fim"><button class="botao botao-texto" data-acao="voltar">' + esc(TD.voltar) + '</button>' +
-      '<button class="botao botao-primario" data-acao="triagem-ok"' + (Desc.triagemCompleta(estado) ? '' : ' disabled') + '>' + esc(TD.triagem_botao) + '</button></div></section>';
+    // Layout do mockup do Zamir para "Seu Perfil" (06/10), na mesma linguagem da tela inicial.
+    var h = '<section class="perfil"><p class="abertura-eyebrow">' + esc(TD.triagem_eyebrow) + '</p><h1 class="perfil-titulo">' + esc(TD.triagem_titulo) + '</h1><p class="perfil-apoio">' + esc(TD.triagem_porque) + '</p>';
+    h += '<div class="perfil-grupo"><h3 class="perfil-rotulo">' + esc(TD.triagem_ocupacao) + '</h3>' + chips("ocupacao", tri.ocupacoes, estado.ocupacao) + '</div>';
+    if (estado.ocupacao === "negocio") h += '<div class="perfil-grupo"><h3 class="perfil-rotulo">' + esc(TD.triagem_tipo_negocio) + '</h3>' + chips("tipo", tri.tipos_negocio, estado.tipoNegocio) + '</div>';
+    if (estado.ocupacao === "colaborador") h += '<div class="perfil-grupo"><h3 class="perfil-rotulo">' + esc(TD.triagem_lidera) + '</h3>' + chips("lidera", tri.lidera, estado.lidera === true ? "sim" : (estado.lidera === false ? "nao" : null)) + '</div>';
+    // "Tem Filhos?" só aparece depois da pergunta seguinte à ocupação: a área do negócio ou a equipe (pedido do Zamir, 06/10).
+    var antesRespondida = estado.ocupacao && (estado.ocupacao !== "negocio" || estado.tipoNegocio) && (estado.ocupacao !== "colaborador" || estado.lidera === true || estado.lidera === false);
+    if (antesRespondida) h += '<div class="perfil-grupo" id="bloco-filhos"><h3 class="perfil-rotulo">' + esc(TD.triagem_filhos) + '</h3>' + chips("filhos", tri.filhos, estado.filhos === true ? "sim" : (estado.filhos === false ? "nao" : null)) + '</div>';
+    h += '<div class="acoes acoes-fim perfil-acoes"><button class="botao botao-texto" data-acao="voltar">' + esc(TD.voltar) + '</button>' +
+      '<button class="botao botao-primario" data-acao="triagem-ok"' + (Desc.triagemCompleta(estado) ? '' : ' disabled') + '>' + esc(TD.triagem_botao) + '</button></div>';
+    h += assinatura() + '</section>';
     return h;
   }
 
+  // Depois da área ou da equipe, leva a pergunta dos filhos e o botão Continuar para dentro da tela.
+  function mostrarFimDaTriagem() {
+    var el = document.querySelector(".perfil-acoes");
+    if (!el || !el.scrollIntoView) return;
+    var reduz = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduz ? "auto" : "smooth", block: "nearest" });
+  }
   function comNome(est, frase) {
     var nome = nomeDe(est);
     return nome ? nome + ", " + frase.charAt(0).toLowerCase() + frase.slice(1) : frase;
@@ -1173,7 +1204,7 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
   // ------------------------------------------------------------------ render e navegação
   function render() {
     var h;
-    document.body.classList.toggle("tela-abertura", !visao && estado.etapa === "abertura");
+    document.body.classList.toggle("tela-abertura", !visao && (estado.etapa === "abertura" || estado.etapa === "triagem"));
     if (visao) h = telaExemplo();
     else if (estado.etapa === "abertura") h = telaAbertura();
     else if (estado.etapa === "triagem") h = telaTriagem();
@@ -1258,8 +1289,8 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
     if (acao === "racional-desligar") { racionalLigado = false; gravarRacional(false); return render(); }
 
     if (acao === "ocupacao") { estado.ocupacao = valor; if (valor !== "negocio") estado.tipoNegocio = null; if (valor !== "colaborador") estado.lidera = null; salvar(); return render(); }
-    if (acao === "tipo") { estado.tipoNegocio = valor; salvar(); return render(); }
-    if (acao === "lidera") { estado.lidera = valor === "sim"; salvar(); return render(); }
+    if (acao === "tipo") { estado.tipoNegocio = valor; salvar(); render(); return mostrarFimDaTriagem(); }
+    if (acao === "lidera") { estado.lidera = valor === "sim"; salvar(); render(); return mostrarFimDaTriagem(); }
     if (acao === "filhos") { estado.filhos = valor === "sim"; salvar(); return render(); }
     if (acao === "triagem-ok") return irPara("entrada1");
     if (acao === "comecar-etapa") { var et = alvo.getAttribute("data-etapa"); if (et === "e2" || et === "e3") garantirFilas(); return irPara(et, 0); }
