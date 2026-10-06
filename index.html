@@ -279,6 +279,22 @@ body.tela-abertura { background-color: var(--ab-fundo-2); background-image: line
 .perfil-acoes .botao-primario { min-width: 104px; }
 .perfil .abertura-assinatura { margin-top: 18px; }
 
+/* Entrada das etapas no layout do mockup do Zamir (06/10). */
+:root { --ab-texto: #1C2140; --ab-circulo: #EEF0FB; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ab-texto: #E3E3EF; --ab-circulo: #262840; } }
+:root[data-theme="dark"] { --ab-texto: #E3E3EF; --ab-circulo: #262840; }
+.entrada { display: flex; flex-direction: column; padding: 40px 18px 0; min-height: 100vh; min-height: 100svh; box-sizing: border-box; }
+.entrada-titulo { font-family: "EB Garamond", var(--font-display); font-weight: 400; font-size: 2.15rem; letter-spacing: -0.01em; line-height: 1.1; color: var(--ink); margin: 16px 0 0; text-wrap: balance; }
+.entrada-contexto { font-size: 15.5px; font-weight: 300; line-height: 1.4; color: var(--ab-suave); margin: 12px 0 0; max-width: none; }
+.entrada-rotulo { margin: 28px 0 0; }
+.entrada-passos { list-style: none; counter-reset: passo; margin: 16px 0 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
+.entrada-passos li { counter-increment: passo; display: grid; grid-template-columns: 30px minmax(0, 1fr); column-gap: 16px; align-items: center; font-size: 14.5px; line-height: 1.45; color: var(--ab-texto); max-width: none; }
+.entrada-passos li::before { content: counter(passo); width: 30px; height: 30px; border-radius: 50%; background: var(--ab-circulo); color: var(--ab-texto); display: grid; place-items: center; font-size: 13px; font-weight: 400; }
+.entrada-orientacao { font-size: 15.5px; font-weight: 600; line-height: 1.45; color: var(--ab-texto); margin: 26px 0 0; max-width: none; }
+.entrada-acoes { margin: 28px 0 0; }
+.entrada-acoes .botao-primario { min-width: 120px; height: 50px; border-radius: 10px; }
+.entrada .abertura-assinatura { margin-top: 18px; }
+
 details.ferramentas { margin: 24px 0 0; border-top: 1px dashed var(--grid); padding-top: 14px; color: var(--muted); }
 details.ferramentas > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; }
 details.ferramentas > div { margin-top: 18px; }
@@ -1027,13 +1043,15 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
   }
   function telaEntrada(n) {
     var vars = { mundo_em: Desc.mundo(D, estado, "em"), mundo_de: Desc.mundo(D, estado, "de") };
-    var h = '<section class="etapa pilha-larga"><div class="pilha"><p class="eyebrow">' + esc(TD["entrada" + n + "_eyebrow"]) + '</p><h2>' + esc(tituloEtapa(n)) + '</h2>';
-    h += '<p>' + esc(comNome(estado, preencher(TD["entrada" + n + "_contexto"], vars))) + '</p></div>';
-    h += '<div class="pilha como"><h3>' + esc(TD.entrada_como_rotulo) + '</h3><ol class="passos">';
+    // Layout do mockup do Zamir para a entrada da etapa (06/10), na linguagem da tela inicial.
+    var h = '<section class="entrada"><p class="abertura-eyebrow">' + esc(TD["entrada" + n + "_eyebrow"]) + '</p><h1 class="entrada-titulo">' + esc(tituloEtapa(n)) + '</h1>';
+    h += '<p class="entrada-contexto">' + esc(comNome(estado, preencher(TD["entrada" + n + "_contexto"], vars))) + '</p>';
+    h += '<h3 class="perfil-rotulo entrada-rotulo">' + esc(TD.entrada_como_rotulo) + '</h3><ol class="entrada-passos">';
     passosEntrada(n).forEach(function (p) { h += '<li>' + esc(p) + '</li>'; });
-    h += '</ol><p class="orientacao">' + esc(TD["entrada" + n + "_orientacao"]) + '</p></div>';
-    h += '<div class="acoes acoes-fim"><button class="botao botao-texto" data-acao="voltar">' + esc(TD.voltar) + '</button>' +
-      '<button class="botao botao-primario" data-acao="comecar-etapa" data-etapa="e' + n + '">' + esc(TD.entrada_botao) + '</button></div></section>';
+    h += '</ol><p class="entrada-orientacao">' + esc(TD["entrada" + n + "_orientacao"]) + '</p>';
+    h += '<div class="acoes acoes-fim entrada-acoes"><button class="botao botao-texto" data-acao="voltar">' + esc(TD.voltar) + '</button>' +
+      '<button class="botao botao-primario" data-acao="comecar-etapa" data-etapa="e' + n + '">' + esc(TD.entrada_botao) + '</button></div>';
+    h += assinatura() + '</section>';
     return h;
   }
 
@@ -1206,7 +1224,7 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
   // ------------------------------------------------------------------ render e navegação
   function render() {
     var h;
-    document.body.classList.toggle("tela-abertura", !visao && (estado.etapa === "abertura" || estado.etapa === "triagem"));
+    document.body.classList.toggle("tela-abertura", !visao && /^(abertura|triagem|entrada\d)$/.test(estado.etapa));
     if (visao) h = telaExemplo();
     else if (estado.etapa === "abertura") h = telaAbertura();
     else if (estado.etapa === "triagem") h = telaTriagem();
