@@ -210,8 +210,11 @@ th { color: var(--muted); font-weight: 600; }
 .roda .fundo { fill: var(--surface); stroke: var(--line); stroke-width: 1; }
 .roda .grade { fill: none; stroke: var(--grid); stroke-width: 1; stroke-dasharray: 2 4; }
 .roda .anel { fill: var(--line); }
-.roda .rotulo { fill: var(--ink); font-size: 11.5px; font-weight: 500; }
-.roda .texto-banda { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; }
+/* Hierarquia da Roda (13/10): em cada emoção, a fatia de maior pontuação em destaque e a menor mais clara e discreta. */
+.roda .rotulo { fill: var(--muted); font-size: 11.5px; font-weight: 400; }
+.roda .rotulo-forte { fill: var(--ink); font-weight: 700; }
+.roda .fatia-clara { fill-opacity: 0.45; }
+.roda .texto-banda { font-size: 13px; font-weight: 700; letter-spacing: 0.14em; }
 .roda .banda-T, .roda .w-T { fill: var(--t); }
 .roda .banda-M, .roda .w-M { fill: var(--m); }
 .roda .banda-A, .roda .w-A { fill: var(--a); }
@@ -220,7 +223,8 @@ th { color: var(--muted); font-weight: 600; }
 .roda .texto-banda-M { fill: var(--m-ink); }
 .roda .texto-banda-A { fill: var(--a-ink); }
 .roda .texto-banda-R { fill: var(--r-ink); }
-.roda .valor-fatia { fill: var(--ink); font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.roda .valor-fatia { fill: var(--muted); font-size: 11.5px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.roda .valor-forte { fill: var(--ink); font-size: 15px; font-weight: 700; }
 .roda .cubo { fill: var(--ink); }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
 
@@ -1054,8 +1058,22 @@ details.racional[open] > summary { background: var(--accent); color: var(--accen
   }
   function raioDe(v) { return R.rCubo + (Math.max(0, Math.min(10, v)) / 10) * (R.rMax - R.rCubo); }
 
+  /* Hierarquia (mockup do Zamir, 13/10): em cada emoção, a fatia de maior pontuação fica em destaque (cor viva, nome em
+     negrito, valor maior); a menor fica mais clara e discreta. No empate, como o valor aparece com uma casa, as duas
+     ficam em destaque. Só muda a aparência: geometria e valores são os mesmos. */
+  function emDestaque(roda, emocaoDe) {
+    var porEmocao = {}, destaque = {};
+    R.fatias.forEach(function (f) { (porEmocao[emocaoDe[f[0]]] = porEmocao[emocaoDe[f[0]]] || []).push(f[0]); });
+    Object.keys(porEmocao).forEach(function (e) {
+      var par = porEmocao[e], maior = Math.max.apply(null, par.map(function (c) { return Math.round((roda[c] || 0) * 10); }));
+      par.forEach(function (c) { destaque[c] = Math.round((roda[c] || 0) * 10) === maior; });
+    });
+    return destaque;
+  }
+
   /* roda: valores 0 a 10 por célula; prefixo: id único na página; nomes: {celula: nome}; emocoes: {codigo: nome}; emocaoDe: {celula: codigo}. */
   function desenhar(roda, prefixo, nomes, emocoes, emocaoDe) {
+    var destaque = emDestaque(roda, emocaoDe);
     var s = '<svg class="roda" viewBox="0 0 440 440" role="img" aria-label="Roda da Harmonização das Emoções com as oito fatias de 0 a 10"><defs>';
     R.fatias.forEach(function (f) {
       var emBaixo = f[0] === "MO" || f[0] === "EU";
@@ -1072,16 +1090,16 @@ details.racional[open] > summary { background: var(--accent); color: var(--accen
     });
     R.fatias.forEach(function (f) {
       s += '<path class="anel" d="' + setor(R.rEtqIn, R.rEtqOut, f[1] + 0.4, f[2] - 0.4) + '"/>';
-      s += '<text class="rotulo"><textPath href="#' + prefixo + '-etq-' + f[0] + '" startOffset="50%" text-anchor="middle">' + esc(nomes[f[0]]) + '</textPath></text>';
+      s += '<text class="rotulo' + (destaque[f[0]] ? ' rotulo-forte' : '') + '"><textPath href="#' + prefixo + '-etq-' + f[0] + '" startOffset="50%" text-anchor="middle">' + esc(nomes[f[0]]) + '</textPath></text>';
       s += '<path class="fundo" d="' + setor(0, R.rMax, f[1], f[2]) + '"/>';
     });
     [2, 4, 6, 8, 10].forEach(function (v) { s += '<circle class="grade" cx="' + R.cx + '" cy="' + R.cy + '" r="' + f2(raioDe(v)) + '"/>'; });
     R.fatias.forEach(function (f) {
       var v = roda[f[0]] || 0, emo = emocaoDe[f[0]];
-      if (v > 0) s += '<path class="w-' + emo + '" d="' + setor(0, raioDe(v), f[1] + 1.2, f[2] - 1.2) + '"/>';
+      if (v > 0) s += '<path class="w-' + emo + (destaque[f[0]] ? '' : ' fatia-clara') + '" d="' + setor(0, raioDe(v), f[1] + 1.2, f[2] - 1.2) + '"/>';
       var meio = (f[1] + f[2]) / 2;
       var p = ponto(Math.max(R.rCubo + 16, Math.min(R.rMax - 12, raioDe(v) + 13)), meio);
-      s += '<text class="valor-fatia" x="' + p[0] + '" y="' + p[1] + '" text-anchor="middle" dominant-baseline="middle">' + num(v) + '</text>';
+      s += '<text class="valor-fatia' + (destaque[f[0]] ? ' valor-forte' : '') + '" x="' + p[0] + '" y="' + p[1] + '" text-anchor="middle" dominant-baseline="middle">' + num(v) + '</text>';
     });
     s += '<circle class="cubo" cx="' + R.cx + '" cy="' + R.cy + '" r="' + R.rCubo + '"/></svg>';
     return s;
@@ -1121,7 +1139,7 @@ details.racional[open] > summary { background: var(--accent); color: var(--accen
     return s;
   }
 
-  var API = { desenhar: desenhar, previa: previa };
+  var API = { desenhar: desenhar, previa: previa, emDestaque: emDestaque };
   if (typeof module === "object" && module.exports) module.exports = API;
   else raiz.Roda = API;
 })(typeof window !== "undefined" ? window : globalThis);
