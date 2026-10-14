@@ -269,10 +269,14 @@ h1, h2, h3 { color: var(--ink); }
 .topo { padding-block: 16px 0; gap: 0; background: var(--bg); }
 .topo-linha { align-items: center; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
 .topo-linha strong { font-size: 11.5px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--eyebrow); white-space: nowrap; }
-.segmentos { display: flex; gap: 4px; flex: 0 1 132px; min-width: 0; }
-.segmentos span { flex: 1; height: 5px; border-radius: 3px; background: var(--seg-vazio); }
-.segmentos span.cheio { background: var(--accent); }
-.contador { font-size: 11.5px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lilas); margin: 0; }
+.segmentos { display: flex; gap: 5px; flex: 0 1 132px; min-width: 0; }
+.segmentos span { flex: 1; height: 5px; border-radius: 3px; background: var(--seg-vazio); overflow: hidden; }
+.segmentos span.cheio, .segmentos span i { background: var(--accent); }
+.segmentos span i { display: block; height: 100%; }
+/* Contador da pergunta com o "?" do racional à direita (mockup do Zamir, 13/10). */
+.contador-linha { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; min-height: 32px; }
+.contador { font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lilas); margin: 0; }
+.contador-linha details.racional > summary { margin: 0 0 0 auto; width: 32px; height: 32px; }
 
 /* Botões: o principal em berinjela, largura total e em pílula; a seta quando a pessoa avança. */
 .botao { border-radius: 999px; font-family: var(--font-body); }
@@ -289,6 +293,13 @@ button:focus-visible, summary:focus-visible { outline-color: var(--lilas); }
 .rodape { display: flex; flex-direction: column; gap: 6px; margin: 28px 0 0; }
 .rodape-linha { display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; }
 .rodape-linha .botao-secundario { min-height: 40px; padding: 8px 18px; font-size: 15px; }
+/* Voltar com a seta para a esquerda (mockup do Zamir, 13/10). */
+.botao-voltar { display: inline-flex; align-items: center; gap: 16px; font-size: 16.5px; font-weight: 500; }
+.botao-voltar::before {
+  content: ""; flex: none; width: 20px; height: 12px; background: currentColor; transform: scaleX(-1);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M0 6h18M13 1l5 5-5 5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 12'%3E%3Cpath d='M0 6h18M13 1l5 5-5 5' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat center / contain;
+}
 
 /* Arte lateral: pétalas lilás e pêssego à direita, atrás do texto. */
 .arte { position: absolute; z-index: -1; right: -24px; top: -8px; width: 68%; max-width: 320px; aspect-ratio: 240 / 420; background: var(--arte) no-repeat right top / contain; opacity: var(--arte-opacidade); pointer-events: none; }
@@ -357,9 +368,8 @@ button:focus-visible, summary:focus-visible { outline-color: var(--lilas); }
 .entrada .rodape { margin-top: 14px; }
 
 /* Perguntas: situações, desempate e afirmações. */
-.pergunta-tela { position: relative; display: flex; flex-direction: column; padding: 22px 8px 0; }
-.cena-linha { display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap; }
-.cena-linha > :first-child { flex: 1 1 240px; }
+.pergunta-tela { position: relative; isolation: isolate; display: flex; flex-direction: column; padding: 22px 8px 0; }
+.pergunta-tela > .arte { top: 30px; right: -16px; width: 64%; max-width: 300px; }
 .pergunta-tela .cena { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); margin: 10px 0 0; }
 .pergunta-tela .prompt { font-size: 16px; font-weight: 500; color: var(--ameixa); margin: 16px 0 0; }
 .pergunta-tela .prompt.prompt-avancando { color: var(--texto); }
@@ -390,13 +400,15 @@ button:focus-visible, summary:focus-visible { outline-color: var(--lilas); }
   100% { box-shadow: none; }
 }
 @media (prefers-reduced-motion: reduce) { .pergunta-tela .prompt-caixa { animation: none; } }
-.pergunta-tela .pergunta { font-size: 15px; font-weight: 500; color: var(--texto); margin: 10px 0 0; }
-.pergunta-tela .afirmacao { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.2; letter-spacing: -0.01em; color: var(--ink); min-height: 0; margin: 12px 0 0; }
-.pergunta-tela .escala { margin-top: 20px; gap: 8px; }
-.pergunta-tela .escala button { min-height: 52px; padding: 10px 22px; border-radius: 999px; border: 1px solid var(--borda); background: var(--surface); color: var(--ink); font-size: 16px; }
-.pergunta-tela .escala button .valor { color: var(--muted); }
+/* Afirmação (mockup do Zamir, 13/10): a frase em destaque e a pergunta em cinza logo abaixo, numa coluna que deixa
+   a arte aparecer à direita; opções em pílula com o círculo de marcar, a marcada em berinjela. */
+.pergunta-tela .afirmacao { font-family: var(--font-display); font-weight: 400; font-size: 2rem; line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); min-height: 0; margin: 14px 0 0; max-width: min(80%, 24rem); }
+.pergunta-tela .pergunta { font-size: 16px; font-weight: 400; line-height: 1.45; color: var(--muted); margin: 14px 0 0; max-width: min(80%, 24rem); }
+.pergunta-tela .escala { margin-top: 28px; gap: 10px; }
+.pergunta-tela .escala button { min-height: 50px; padding: 10px 22px 10px 26px; border-radius: 999px; border: 1px solid var(--borda); background: color-mix(in srgb, var(--surface) 82%, transparent); color: var(--ink); font-size: 16.5px; }
+.pergunta-tela .escala .marcador { flex: none; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid var(--grid); }
 .pergunta-tela .escala button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-.pergunta-tela .escala button[aria-pressed="true"] .valor { color: var(--accent-ink); }
+.pergunta-tela .escala button[aria-pressed="true"] .marcador { border: 2px solid currentColor; background: radial-gradient(circle, currentColor 0 3.5px, transparent 4px); }
 
 /* Pedidos de contato e de idade, no layout do mockup do Zamir (13/10): arte no topo, sobretítulo lilás com a linha de
    progresso, título grande e o apoio; no contato, a prévia da Roda em meia roda, a frase do pedido, os campos e as notas. */
@@ -533,7 +545,8 @@ details.racional[open] > summary { background: var(--accent); color: var(--accen
 .aviso-validacao .botao-texto { color: var(--warn-ink); min-height: 32px; padding: 4px 0; font-size: 0.8rem; }
 
 @media (max-width: 420px) {
-  .pergunta-tela .cena, .pergunta-tela .afirmacao { font-size: 1.6rem; }
+  .pergunta-tela .cena { font-size: 1.6rem; }
+  .pergunta-tela .afirmacao { font-size: 1.8rem; }
   .perfil-titulo, .entrada-titulo { font-size: 1.95rem; }
 }
 
@@ -1262,22 +1275,26 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
 
   // ------------------------------------------------------------------ pedaços de tela
   // Layout dos mockups do Zamir das Leituras 1 e 2 (12/10), em todas as telas.
-  // Topo: rótulo à esquerda ("Etapa 1 de 3", "Leitura 2 de 3"), segmentos à direita até o ponto atual, linha fina embaixo.
-  function topo(rotulo, atual, total) {
+  // Topo: rótulo à esquerda ("Etapa 1 de 3", "Leitura 2 de 3"), os três segmentos à direita, linha fina embaixo.
+  // Nas etapas (mockup do Zamir, 13/10), as etapas feitas ficam cheias e a atual enche conforme as respostas.
+  function topo(rotulo, atual, total, avanco) {
     var seg = '';
-    for (var k = 0; k < total; k++) seg += '<span' + (k <= atual ? ' class="cheio"' : '') + '></span>';
+    for (var k = 0; k < total; k++) {
+      var cheio = k < atual || (k === atual && (avanco == null || avanco >= 1));
+      seg += cheio ? '<span class="cheio"></span>' : '<span>' + (k === atual && avanco > 0 ? '<i style="width:' + Math.round(avanco * 100) + '%"></i>' : '') + '</span>';
+    }
     return '<header class="topo"><div class="topo-linha"><strong>' + esc(rotulo) + '</strong><div class="segmentos" aria-hidden="true">' + seg + '</div></div>' +
       (racionalLigado ? '<div class="aviso-validacao"><span>' + esc(TD.validacao_aviso) + '</span><button class="botao botao-texto" data-acao="racional-desligar">' + esc(TD.validacao_desligar) + '</button></div>' : '') + '</header>';
   }
-  // Nas perguntas, os segmentos contam as perguntas da etapa e o contador ("Situação 2 de 5") fica acima da cena.
-  function contador(texto) { return '<p class="contador">' + esc(texto) + '</p>'; }
+  // Nas perguntas, o contador ("Situação 2 de 5", "Afirmação 3") fica acima da cena, com o "?" do racional à direita (mockup do Zamir, 13/10).
+  function contador(texto, racional) { return '<div class="contador-linha"><p class="contador">' + esc(texto) + '</p>' + (racional || '') + '</div>'; }
   // Botão principal: berinjela, largura total; com seta quando a pessoa avança.
   function botaoPrincipal(rotulo, atributos, semSeta) {
     return '<button class="botao botao-primario botao-largo' + (semSeta ? '' : ' botao-seta') + '" ' + atributos + '>' + esc(rotulo) + '</button>';
   }
   // Rodapé das telas: o botão principal em cima; Voltar e a ação secundária embaixo.
   function rodape(principal, voltar, secundario) {
-    var linha = (voltar || secundario) ? '<div class="rodape-linha">' + (voltar ? '<button class="botao botao-texto" type="button" data-acao="voltar">' + esc(TD.voltar) + '</button>' : '<span></span>') + (secundario || '') + '</div>' : '';
+    var linha = (voltar || secundario) ? '<div class="rodape-linha">' + (voltar ? '<button class="botao botao-texto botao-voltar" type="button" data-acao="voltar">' + esc(TD.voltar) + '</button>' : '<span></span>') + (secundario || '') + '</div>' : '';
     return '<div class="rodape">' + (principal || '') + linha + '</div>';
   }
   // Arte lateral (pétalas lilás e pêssego), atrás do texto: no topo, no meio ou no fim do bloco.
@@ -1445,7 +1462,7 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
   // ------------------------------------------------------------------ situações e afirmações
   function telaSituacao(lista, n) {
     var s = Desc.situacaoPara(D, estado, lista[estado.i]), ordem = estado.ordens[s.id] || [];
-    var h = topo(TD["entrada" + n + "_eyebrow"], estado.i, lista.length);
+    var h = topo(TD["entrada" + n + "_eyebrow"], n - 1, 3, estado.i / lista.length);
     var fechadas = ordem.length >= 2;
     var chavePrompt = Desc.promptDe(ordem), promptHtml;
     if (chavePrompt === "situacao_prompt_2") {
@@ -1457,8 +1474,8 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
     } else {
       promptHtml = '<p class="prompt" aria-live="polite">' + esc(TD[chavePrompt]) + '</p>';
     }
-    h += '<section class="pergunta-tela">' + contador(preencher(TD.topo_situacao, { i: estado.i + 1, total: lista.length })) +
-      '<div class="cena-linha"><h1 class="cena">' + esc(s.cena) + '</h1>' + (racionalLigado ? racionalDaSituacao(s) : '') + '</div>' + promptHtml;
+    h += '<section class="pergunta-tela">' + arte("topo") + contador(preencher(TD.topo_situacao, { i: estado.i + 1, total: lista.length }), racionalLigado ? racionalDaSituacao(s) : '') +
+      '<h1 class="cena">' + esc(s.cena) + '</h1>' + promptHtml;
     h += '<div class="opcoes">';
     estado.opcoes[s.id].forEach(function (e) {
       var pos = ordem.indexOf(e), escolhida = pos === 0 || pos === 1, menos = pos === 3;
@@ -1482,9 +1499,9 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
     var prim = primaziaE1(estado), opcoes = Desc.opcoesDesempate(prim, estado.semente);
     var escolha = opcoes.indexOf(estado.desempateE1) !== -1 ? estado.desempateE1 : null;
     var s = Desc.situacaoPara(D, estado, SIT_DESEMPATE);
-    var h = topo(TD.entrada1_eyebrow, SIT1.length - 1, SIT1.length);
-    h += '<section class="pergunta-tela">' + contador(TD.desempate_topo) + '<p class="dica" id="aviso-situacao">' + esc(TD.desempate_aviso) + '</p>';
-    h += '<div class="cena-linha"><h1 class="cena">' + esc(s.cena) + '</h1>' + (racionalLigado ? racionalDoDesempate(s, prim) : '') + '</div>';
+    var h = topo(TD.entrada1_eyebrow, 0, 3, 1);
+    h += '<section class="pergunta-tela">' + arte("topo") + contador(TD.desempate_topo, racionalLigado ? racionalDoDesempate(s, prim) : '') + '<p class="dica" id="aviso-situacao">' + esc(TD.desempate_aviso) + '</p>';
+    h += '<h1 class="cena">' + esc(s.cena) + '</h1>';
     h += '<p class="prompt' + (escolha && avancando ? ' prompt-avancando' : '') + '" aria-live="polite">' + esc(escolha ? (avancando ? TD.situacao_concluindo : TD.situacao_prompt_3) : TD.situacao_prompt_0) + '</p>';
     h += '<div class="opcoes">';
     opcoes.forEach(function (e) {
@@ -1506,12 +1523,13 @@ window.MARCA = {"ibnlife": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALwAAA
 
   function telaAfirmacao(fila, n) {
     var id = fila[estado.i], atual = estado.respostas[id];
-    var h = topo(TD["entrada" + n + "_eyebrow"], estado.i, fila.length);
-    h += '<section class="pergunta-tela">' + contador(preencher(TD.topo_afirmacao, { i: estado.i + 1 })) +
-      '<p class="pergunta">' + esc(TD.afirmacao_pergunta) + '</p><div class="cena-linha"><h1 class="afirmacao">' + esc(AFIRM[id].texto) + '</h1>' + (racionalLigado ? racionalDaAfirmacao(id) : '') + '</div>';
+    var h = topo(TD["entrada" + n + "_eyebrow"], n - 1, 3, estado.i / fila.length);
+    // Mockup do Zamir (13/10): a afirmação em destaque e a pergunta logo abaixo; opções em pílula com o círculo de marcar.
+    h += '<section class="pergunta-tela">' + arte("topo") + contador(preencher(TD.topo_afirmacao, { i: estado.i + 1 }), racionalLigado ? racionalDaAfirmacao(id) : '') +
+      '<h1 class="afirmacao">' + esc(AFIRM[id].texto) + '</h1><p class="pergunta">' + esc(TD.afirmacao_pergunta) + '</p>';
     h += '<div class="escala" role="group" aria-label="Frequência">';
     C.escala.forEach(function (rotulo, v) {
-      h += '<button data-acao="responder" data-valor="' + v + '" aria-pressed="' + (atual === v) + '"><span>' + esc(rotulo) + '</span><span class="valor">' + v + '</span></button>';
+      h += '<button data-acao="responder" data-valor="' + v + '" aria-pressed="' + (atual === v) + '"><span>' + esc(rotulo) + '</span><span class="marcador" aria-hidden="true"></span></button>';
     });
     h += '</div>' + rodape('', true);
     h += assinatura() + '</section>';
