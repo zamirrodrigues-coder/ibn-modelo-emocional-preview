@@ -368,7 +368,7 @@ button:focus-visible, summary:focus-visible { outline-color: var(--lilas); }
 .entrada .rodape { margin-top: 14px; }
 
 /* Perguntas: situações, desempate e afirmações. */
-.pergunta-tela { position: relative; isolation: isolate; display: flex; flex-direction: column; padding: 22px 8px 0; }
+.pergunta-tela { position: relative; isolation: isolate; display: flex; flex-direction: column; padding: 16px 8px 0; }
 .pergunta-tela > .arte { top: 30px; right: -16px; width: 64%; max-width: 300px; }
 .pergunta-tela .cena { font-family: var(--font-display); font-weight: 400; font-size: 1.85rem; line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); margin: 10px 0 0; }
 .pergunta-tela .prompt { font-size: 16px; font-weight: 500; color: var(--ameixa); margin: 16px 0 0; }
@@ -400,12 +400,13 @@ button:focus-visible, summary:focus-visible { outline-color: var(--lilas); }
   100% { box-shadow: none; }
 }
 @media (prefers-reduced-motion: reduce) { .pergunta-tela .prompt-caixa { animation: none; } }
-/* Afirmação (mockup do Zamir, 13/10): a frase em destaque e a pergunta em cinza logo abaixo, numa coluna que deixa
-   a arte aparecer à direita; opções em pílula com o círculo de marcar, a marcada em berinjela. */
-.pergunta-tela .afirmacao { font-family: var(--font-display); font-weight: 400; font-size: 2rem; line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); min-height: 0; margin: 14px 0 0; max-width: min(80%, 24rem); }
-.pergunta-tela .pergunta { font-size: 16px; font-weight: 400; line-height: 1.45; color: var(--muted); margin: 14px 0 0; max-width: min(80%, 24rem); }
-.pergunta-tela .escala { margin-top: 28px; gap: 10px; }
-.pergunta-tela .escala button { min-height: 50px; padding: 10px 22px 10px 26px; border-radius: 999px; border: 1px solid var(--borda); background: color-mix(in srgb, var(--surface) 82%, transparent); color: var(--ink); font-size: 16.5px; }
+/* Afirmação (mockup do Zamir, 13/10): a frase em destaque e a pergunta em cinza logo abaixo, na largura toda, para a
+   frase e as seis opções caberem no celular sem rolar; opções em pílula com o círculo de marcar, a marcada em berinjela. */
+.pergunta-tela .afirmacao { font-family: var(--font-display); font-weight: 400; font-size: 2rem; line-height: 1.18; letter-spacing: -0.01em; color: var(--ink); min-height: 0; margin: 12px 0 0; }
+.pergunta-tela .pergunta { font-size: 16px; font-weight: 400; line-height: 1.45; color: var(--muted); margin: 10px 0 0; }
+.pergunta-tela .escala { margin-top: 20px; gap: 8px; }
+.pergunta-tela .escala + .rodape { margin-top: 14px; }
+.pergunta-tela .escala button { min-height: 46px; padding: 8px 22px 8px 26px; border-radius: 999px; border: 1px solid var(--borda); background: color-mix(in srgb, var(--surface) 82%, transparent); color: var(--ink); font-size: 16.5px; }
 .pergunta-tela .escala .marcador { flex: none; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 1.5px solid var(--grid); }
 .pergunta-tela .escala button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .pergunta-tela .escala button[aria-pressed="true"] .marcador { border: 2px solid currentColor; background: radial-gradient(circle, currentColor 0 3.5px, transparent 4px); }
